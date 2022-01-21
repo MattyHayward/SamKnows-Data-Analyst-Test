@@ -47,17 +47,11 @@
 
 #------- Libraries (1)
 
-#library(tidyverse)              ## Includes many of the libraries below
-library(readr)                   ## For reading rectangular data (i.e. CSV)
-library(dplyr, warn.conflicts=FALSE) ## Data manipulation
-library(tidyr)                   ## Data shaping and tidying
-library(ggplot2)                 ## Graphical visualisation
-library(lubridate, warn.conflicts=FALSE) ## Date-time additional functionailty
-library(reactable)               ## Enhanced html tables
-library(htmlwidgets)             ## 
-library(htmltools)               ## 
-
-
+library(tidyverse)       ## To load readr, dplyr, tidyr, ggplot2...
+library(lubridate)       ## Date-time additional functionailty
+library(reactable)       ## Enhanced html tables
+library(htmlwidgets)     ## 
+library(htmltools)       ## 
 
 
 
@@ -151,9 +145,9 @@ write.csv(combined_tbl, "../output/Combined_table.csv", row.names = FALSE)
 #
 ## There are potentially other quality issues, as will be illustrated in:
 #    "../output/Download_Speeds.pdf"
-#  where there are a handful of mislabelled ISPs as they seem to match the
+#  where there are a handful of mislabelled ISPs. They seem to match the
 #  other ISP's speed distribution but are strong outliers in how they are
-#  labelled currently, however there are likely not many of these such to
+#  labelled currently. However, there are likely not many of these such to
 #  make a significant effect.
 
 
@@ -365,7 +359,7 @@ dl_by_hour_all$type <- factor(dl_by_hour_all$type, levels=c('Fibre','VDSL','ADSL
 p <- dl_by_hour_all %>%
   ggplot(
     aes(x=hour_of_measurement, y=speeds, group=type)) +
-    geom_line(aes(color=type)) +
+    geom_line(aes(linetype=type, color=type)) +
     geom_point(aes(color=type)) +
     facet_grid(type ~ ., scales='free') +
     ggtitle("Download Speeds by Hour") + 
