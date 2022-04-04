@@ -107,11 +107,20 @@ dl_60th_pct <- dl_measurements_jan21_nozeros %>%
   group_by(person_id) %>%
   summarise(avg_download_60th_pct = quantile(avg_download_daily, 0.60), .groups = "drop")
 
+## A more efficient version of the above is as follows.
+#  ... because 'group_by' by default only removes one layer of grouping.
+#  Here, 'person_id' is left grouped after the first 'summarise'.
+dl_60th_pct_2 <- dl_measurements_jan21_nozeros %>%
+  group_by(person_id, floor_date(time_of_measurement, "day")) %>%
+  summarise(avg_download_daily = mean(measured_download_speed_in_Mbps)) %>%
+  summarise(avg_download_60th_pct = quantile(avg_download_daily, 0.60))
+
+
 ## Joining columns to the main df.
 combined_tbl <- person_details %>%
-  inner_join(dl_avg, by = "person_id") %>%
-  inner_join(ul_avg, by = "person_id") %>%
-  inner_join(dl_60th_pct, by = "person_id")
+  left_join(dl_avg, by = "person_id") %>%
+  left_join(ul_avg, by = "person_id") %>%
+  left_join(dl_60th_pct, by = "person_id")
 
 ## Further data cleaning. Some connection types appear to be mislabeled; this
 #  can be rectified by logical comparisons using information we already know
